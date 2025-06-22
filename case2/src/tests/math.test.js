@@ -25,7 +25,7 @@ describe('average function', () => {
   test('should calculate correct average for mixed positive and negative numbers', () => {
     expect(average([-1, 1])).toBe(0);
     expect(average([-2, 0, 2])).toBe(0);
-    expect(average([-5, 5, 10])).toBe(3.333333333333333);
+    expect(average([-5, 5, 10])).toBeCloseTo(3.333333333333333, 10);
   });
 
   test('should handle decimal numbers correctly', () => {
