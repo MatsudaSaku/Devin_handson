@@ -1,0 +1,19 @@
+{
+  "name": "weather-cli",
+  "version": "1.0.0",
+  "description": "CLI tool to fetch weather information",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "commander": "^11.0.0",
+    "dotenv": "^16.3.0",
+    "chalk": "^5.3.0"
+  },
+  "keywords": ["weather", "cli", "api"],
+  "author": "",
+  "license": "ISC"
+}
