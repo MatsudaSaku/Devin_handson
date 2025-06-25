@@ -64,46 +64,63 @@ function displayWeather(data, units) {
   console.log(chalk.green.bold(`${data.name}, ${data.sys.country}の天気情報`));
   console.log(chalk.green('='.repeat(50)));
   
-  const coloredData = {
+  const plainData = {
     位置情報: {
-      都市: chalk.cyan(data.name),
-      国: chalk.cyan(data.sys.country),
+      都市: data.name,
+      国: data.sys.country,
       座標: {
-        緯度: chalk.yellow(data.coord.lat),
-        経度: chalk.yellow(data.coord.lon)
+        緯度: data.coord.lat,
+        経度: data.coord.lon
       }
     },
     天気: {
-      概況: chalk.magenta(data.weather[0].main),
-      詳細: chalk.magenta(data.weather[0].description),
-      アイコン: chalk.blue(data.weather[0].icon)
+      概況: data.weather[0].main,
+      詳細: data.weather[0].description,
+      アイコン: data.weather[0].icon
     },
     気温: {
-      現在: chalk.red(`${data.main.temp}${unitSymbol}`),
-      体感: chalk.red(`${data.main.feels_like}${unitSymbol}`),
-      最低: chalk.blue(`${data.main.temp_min}${unitSymbol}`),
-      最高: chalk.red(`${data.main.temp_max}${unitSymbol}`)
+      現在: `${data.main.temp}${unitSymbol}`,
+      体感: `${data.main.feels_like}${unitSymbol}`,
+      最低: `${data.main.temp_min}${unitSymbol}`,
+      最高: `${data.main.temp_max}${unitSymbol}`
     },
     大気: {
-      気圧: chalk.gray(`${data.main.pressure} hPa`),
-      湿度: chalk.cyan(`${data.main.humidity}%`),
-      視界: chalk.gray(`${(data.visibility / 1000).toFixed(1)} km`)
+      気圧: `${data.main.pressure} hPa`,
+      湿度: `${data.main.humidity}%`,
+      視界: `${(data.visibility / 1000).toFixed(1)} km`
     },
     風: {
-      風速: chalk.green(`${data.wind.speed} ${units === 'metric' ? 'm/s' : 'mph'}`),
-      風向: chalk.green(`${data.wind.deg}°`)
+      風速: `${data.wind.speed} ${units === 'metric' ? 'm/s' : 'mph'}`,
+      風向: `${data.wind.deg}°`
     },
     雲: {
-      雲量: chalk.gray(`${data.clouds.all}%`)
+      雲量: `${data.clouds.all}%`
     },
     太陽: {
-      日の出: chalk.yellow(new Date(data.sys.sunrise * 1000).toLocaleTimeString('ja-JP')),
-      日の入り: chalk.yellow(new Date(data.sys.sunset * 1000).toLocaleTimeString('ja-JP'))
+      日の出: new Date(data.sys.sunrise * 1000).toLocaleTimeString('ja-JP'),
+      日の入り: new Date(data.sys.sunset * 1000).toLocaleTimeString('ja-JP')
     },
-    取得時刻: chalk.gray(new Date(data.dt * 1000).toLocaleString('ja-JP'))
+    取得時刻: new Date(data.dt * 1000).toLocaleString('ja-JP')
   };
 
-  console.log(JSON.stringify(coloredData, null, 2));
+  let jsonOutput = JSON.stringify(plainData, null, 2);
+  
+  jsonOutput = jsonOutput
+    .replace(/"(都市|国)": "([^"]+)"/g, `"$1": ${chalk.cyan('"$2"')}`)
+    .replace(/"(緯度|経度)": ([^,\n]+)/g, `"$1": ${chalk.yellow('$2')}`)
+    .replace(/"(概況|詳細)": "([^"]+)"/g, `"$1": ${chalk.magenta('"$2"')}`)
+    .replace(/"アイコン": "([^"]+)"/g, `"アイコン": ${chalk.blue('"$1"')}`)
+    .replace(/"(現在|体感|最高)": "([^"]+)"/g, `"$1": ${chalk.red('"$2"')}`)
+    .replace(/"最低": "([^"]+)"/g, `"最低": ${chalk.blue('"$1"')}`)
+    .replace(/"(気圧|視界)": "([^"]+)"/g, `"$1": ${chalk.gray('"$2"')}`)
+    .replace(/"湿度": "([^"]+)"/g, `"湿度": ${chalk.cyan('"$1"')}`)
+    .replace(/"(風速|風向)": "([^"]+)"/g, `"$1": ${chalk.green('"$2"')}`)
+    .replace(/"雲量": "([^"]+)"/g, `"雲量": ${chalk.gray('"$1"')}`)
+    .replace(/"(日の出|日の入り)": "([^"]+)"/g, `"$1": ${chalk.yellow('"$2"')}`)
+    .replace(/"取得時刻": "([^"]+)"/g, `"取得時刻": ${chalk.gray('"$1"')}`)
+    .replace(/"(位置情報|天気|気温|大気|風|雲|太陽)":/g, chalk.blue('"$1"') + ':');
+
+  console.log(jsonOutput);
   console.log(chalk.green('='.repeat(50)) + '\n');
 }
 
