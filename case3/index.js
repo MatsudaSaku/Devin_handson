@@ -11,15 +11,15 @@ const program = new Command();
 
 program
   .name('weather-cli')
-  .description('CLI tool to fetch weather information')
+  .description('天気情報を取得するCLIツール')
   .version('1.0.0')
-  .argument('<city>', 'city name to get weather for')
-  .option('-u, --units <type>', 'temperature units (metric, imperial, kelvin)', 'metric')
+  .argument('<city>', '天気を取得する都市名')
+  .option('-u, --units <type>', '温度単位 (metric, imperial, kelvin)', 'metric')
   .action(async (city, options) => {
     try {
       await getWeather(city, options.units);
     } catch (error) {
-      console.error(chalk.red('Error:'), error.message);
+      console.error(chalk.red('エラー:'), error.message);
       process.exit(1);
     }
   });
@@ -29,10 +29,10 @@ async function getWeather(city, units = 'metric') {
   const baseUrl = process.env.WEATHER_API_BASE_URL || 'https://api.openweathermap.org/data/2.5';
   
   if (!apiKey) {
-    throw new Error('WEATHER_API_KEY environment variable is required. Please check your .env file.');
+    throw new Error('WEATHER_API_KEY環境変数が必要です。.envファイルを確認してください。');
   }
 
-  console.log(chalk.blue(`🌤️  Fetching weather for ${chalk.bold(city)}...`));
+  console.log(chalk.blue(`🌤️  ${chalk.bold(city)}の天気情報を取得中...`));
   
   try {
     const response = await axios.get(`${baseUrl}/weather`, {
@@ -48,11 +48,11 @@ async function getWeather(city, units = 'metric') {
     
   } catch (error) {
     if (error.response?.status === 404) {
-      throw new Error(`City "${city}" not found. Please check the spelling and try again.`);
+      throw new Error(`都市「${city}」が見つかりません。スペルを確認して再試行してください。`);
     } else if (error.response?.status === 401) {
-      throw new Error('Invalid API key. Please check your WEATHER_API_KEY in .env file.');
+      throw new Error('無効なAPIキーです。.envファイルのWEATHER_API_KEYを確認してください。');
     } else {
-      throw new Error(`Failed to fetch weather data: ${error.message}`);
+      throw new Error(`天気データの取得に失敗しました: ${error.message}`);
     }
   }
 }
@@ -61,46 +61,46 @@ function displayWeather(data, units) {
   const unitSymbol = units === 'metric' ? '°C' : units === 'imperial' ? '°F' : 'K';
   
   console.log('\n' + chalk.green('='.repeat(50)));
-  console.log(chalk.green.bold(`Weather Information for ${data.name}, ${data.sys.country}`));
+  console.log(chalk.green.bold(`${data.name}, ${data.sys.country}の天気情報`));
   console.log(chalk.green('='.repeat(50)));
   
   const coloredData = {
-    location: {
-      city: chalk.cyan(data.name),
-      country: chalk.cyan(data.sys.country),
-      coordinates: {
-        latitude: chalk.yellow(data.coord.lat),
-        longitude: chalk.yellow(data.coord.lon)
+    位置情報: {
+      都市: chalk.cyan(data.name),
+      国: chalk.cyan(data.sys.country),
+      座標: {
+        緯度: chalk.yellow(data.coord.lat),
+        経度: chalk.yellow(data.coord.lon)
       }
     },
-    weather: {
-      main: chalk.magenta(data.weather[0].main),
-      description: chalk.magenta(data.weather[0].description),
-      icon: chalk.blue(data.weather[0].icon)
+    天気: {
+      概況: chalk.magenta(data.weather[0].main),
+      詳細: chalk.magenta(data.weather[0].description),
+      アイコン: chalk.blue(data.weather[0].icon)
     },
-    temperature: {
-      current: chalk.red(`${data.main.temp}${unitSymbol}`),
-      feels_like: chalk.red(`${data.main.feels_like}${unitSymbol}`),
-      min: chalk.blue(`${data.main.temp_min}${unitSymbol}`),
-      max: chalk.red(`${data.main.temp_max}${unitSymbol}`)
+    気温: {
+      現在: chalk.red(`${data.main.temp}${unitSymbol}`),
+      体感: chalk.red(`${data.main.feels_like}${unitSymbol}`),
+      最低: chalk.blue(`${data.main.temp_min}${unitSymbol}`),
+      最高: chalk.red(`${data.main.temp_max}${unitSymbol}`)
     },
-    atmospheric: {
-      pressure: chalk.gray(`${data.main.pressure} hPa`),
-      humidity: chalk.cyan(`${data.main.humidity}%`),
-      visibility: chalk.gray(`${(data.visibility / 1000).toFixed(1)} km`)
+    大気: {
+      気圧: chalk.gray(`${data.main.pressure} hPa`),
+      湿度: chalk.cyan(`${data.main.humidity}%`),
+      視界: chalk.gray(`${(data.visibility / 1000).toFixed(1)} km`)
     },
-    wind: {
-      speed: chalk.green(`${data.wind.speed} ${units === 'metric' ? 'm/s' : 'mph'}`),
-      direction: chalk.green(`${data.wind.deg}°`)
+    風: {
+      風速: chalk.green(`${data.wind.speed} ${units === 'metric' ? 'm/s' : 'mph'}`),
+      風向: chalk.green(`${data.wind.deg}°`)
     },
-    clouds: {
-      coverage: chalk.gray(`${data.clouds.all}%`)
+    雲: {
+      雲量: chalk.gray(`${data.clouds.all}%`)
     },
-    sun: {
-      sunrise: chalk.yellow(new Date(data.sys.sunrise * 1000).toLocaleTimeString()),
-      sunset: chalk.yellow(new Date(data.sys.sunset * 1000).toLocaleTimeString())
+    太陽: {
+      日の出: chalk.yellow(new Date(data.sys.sunrise * 1000).toLocaleTimeString('ja-JP')),
+      日の入り: chalk.yellow(new Date(data.sys.sunset * 1000).toLocaleTimeString('ja-JP'))
     },
-    timestamp: chalk.gray(new Date(data.dt * 1000).toLocaleString())
+    取得時刻: chalk.gray(new Date(data.dt * 1000).toLocaleString('ja-JP'))
   };
 
   console.log(JSON.stringify(coloredData, null, 2));

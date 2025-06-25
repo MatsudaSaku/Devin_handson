@@ -1,56 +1,56 @@
-# Weather CLI
+# 天気情報CLI
 
-A colorful command-line interface for fetching weather information using the OpenWeatherMap API.
+OpenWeatherMap APIを使用してカラフルな天気情報を表示するコマンドラインインターフェースです。
 
-## Setup
+## セットアップ
 
-1. Install dependencies:
+1. 依存関係をインストール:
    ```bash
    npm install
    ```
 
-2. Get a free API key from [OpenWeatherMap](https://openweathermap.org/api)
+2. [OpenWeatherMap](https://openweathermap.org/api)から無料のAPIキーを取得
 
-3. Create a `.env` file based on `.env.example`:
+3. `.env.example`を基に`.env`ファイルを作成:
    ```bash
    cp .env.example .env
    ```
 
-4. Add your API key to the `.env` file:
+4. `.env`ファイルにAPIキーを追加:
    ```
-   WEATHER_API_KEY=your_actual_api_key_here
+   WEATHER_API_KEY=あなたの実際のAPIキー
    ```
 
-## Usage
+## 使用方法
 
 ```bash
-# Basic usage
+# 基本的な使用方法
 node index.js Tokyo
 
-# With temperature units
+# 温度単位を指定
 node index.js Tokyo --units imperial
 node index.js Tokyo --units metric
 node index.js Tokyo --units kelvin
 
-# Help
+# ヘルプ表示
 node index.js --help
 ```
 
-## Features
+## 機能
 
-- 🌈 Colorful JSON output
-- 🌡️ Multiple temperature units (Celsius, Fahrenheit, Kelvin)
-- 🌍 Works with any city worldwide
-- ⚡ Fast API responses
-- 🔒 Secure API key management with environment variables
+- 🌈 カラフルなJSON出力
+- 🌡️ 複数の温度単位対応（摂氏、華氏、ケルビン）
+- 🌍 世界中の都市に対応
+- ⚡ 高速なAPI応答
+- 🔒 環境変数による安全なAPIキー管理
 
-## Example Output
+## 出力例
 
-The CLI displays weather information in a colorful, structured JSON format including:
-- Location details (city, country, coordinates)
-- Current weather conditions
-- Temperature information (current, feels like, min/max)
-- Atmospheric data (pressure, humidity, visibility)
-- Wind information
-- Cloud coverage
-- Sunrise/sunset times
+CLIは以下の情報をカラフルで構造化されたJSON形式で表示します：
+- 位置情報（都市、国、座標）
+- 現在の天気状況
+- 気温情報（現在、体感、最低/最高）
+- 大気データ（気圧、湿度、視界）
+- 風の情報
+- 雲の覆い
+- 日の出/日の入り時刻
